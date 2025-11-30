@@ -3,10 +3,12 @@ services:
     name: github-metrics-service
     env: python
     pythonVersion: "3.12.0"
-    buildCommand: python3.12 -m pip install --upgrade pip && python3.12 -m pip install -r requirements.txt
+    buildCommand: pip install --upgrade pip setuptools wheel && pip install --only-binary :all: -r requirements.txt || (pip install --prefer-binary -r requirements.txt || pip install -r requirements.txt --no-build-isolation)
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
         value: sqlite:///./github_metrics.db
+      - key: PYTHON_VERSION
+        value: "3.12.0"
     plan: free
 
